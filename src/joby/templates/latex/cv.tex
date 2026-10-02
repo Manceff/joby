@@ -1,0 +1,79 @@
+% =====================================================================
+%  Joby — modèle de CV par défaut (corporate, une colonne, compilé par Tectonic)
+%  L'onboarding adapte ce fichier à tes goûts : police, couleurs, sections...
+%  Pendant la pipeline, seul le contenu entre \begin{document} et
+%  \end{document} change d'une candidature à l'autre ; le préambule est figé.
+% =====================================================================
+\documentclass[10.5pt]{article}
+
+\usepackage[a4paper, top=1.6cm, bottom=1.6cm, left=1.8cm, right=1.8cm]{geometry}
+\usepackage{fontspec}
+\setmainfont{texgyreheros}[
+  Extension = .otf,
+  UprightFont = *-regular,
+  BoldFont = *-bold,
+  ItalicFont = *-italic,
+  BoldItalicFont = *-bolditalic,
+]
+\usepackage{xcolor}
+\usepackage{titlesec}
+\usepackage{enumitem}
+\usepackage[hidelinks]{hyperref}
+
+\definecolor{ink}{HTML}{1F2A37}
+\definecolor{accent}{HTML}{1F4E79}
+\definecolor{soft}{HTML}{5B6573}
+\color{ink}
+
+\pagestyle{empty}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0pt}
+\linespread{1.08}
+
+% --- Titres de section -------------------------------------------------
+\titleformat{\section}{\color{accent}\bfseries\large\scshape}{}{0pt}{}[\vspace{2pt}\color{accent!35}\titlerule]
+\titlespacing*{\section}{0pt}{10pt}{6pt}
+
+% --- Listes ------------------------------------------------------------
+\setlist[itemize]{leftmargin=1.1em, itemsep=1.5pt, topsep=3pt, label={\color{accent}\textbullet}}
+
+% --- Macros de contenu ---------------------------------------------------
+% \cvheader{Nom}{Titre}{ligne de contact}
+\newcommand{\cvheader}[3]{%
+  {\fontsize{24}{28}\selectfont\bfseries #1}\\[3pt]
+  {\large\color{accent} #2}\\[5pt]
+  {\small\color{soft} #3}\par\vspace{4pt}}
+% \cvsummary{texte}
+\newcommand{\cvsummary}[1]{{\small #1}\par}
+% \cventry{Poste}{Organisation}{Lieu}{Dates}
+\newcommand{\cventry}[4]{%
+  \par\vspace{5pt}\noindent\textbf{#1}\,{\color{soft}|}\,#2\hfill{\small\color{soft}#4}\par
+  \if\relax\detokenize{#3}\relax\else\noindent{\small\itshape\color{soft}#3}\par\fi}
+% \cvskill{Catégorie}{détails}
+\newcommand{\cvskill}[2]{\textbf{#1:} #2\par\vspace{2pt}}
+
+\begin{document}
+
+\cvheader{Firstname Lastname}{Target Role}{%
+  City, Country \enspace·\enspace +33 6 00 00 00 00 \enspace·\enspace
+  \href{mailto:name@example.com}{name@example.com} \enspace·\enspace
+  \href{https://linkedin.com/in/example}{linkedin.com/in/example}}
+
+\section{Profile}
+\cvsummary{Two or three sentences that say who you are, what you bring and what you are looking for.}
+
+\section{Experience}
+\cventry{Job Title}{Company}{City, Country}{Jan 2023 -- Present}
+\begin{itemize}
+  \item Achievement with a measurable result.
+  \item Achievement with a measurable result.
+\end{itemize}
+
+\section{Education}
+\cventry{Degree}{School}{City, Country}{2019 -- 2022}
+
+\section{Skills}
+\cvskill{Languages}{French (native), English (fluent)}
+\cvskill{Tools}{Tool, Tool, Tool}
+
+\end{document}

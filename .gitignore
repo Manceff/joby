@@ -1,0 +1,11 @@
+# Tes données personnelles ne quittent jamais ta machine.
+user/*
+!user/README.md
+
+.venv/
+__pycache__/
+*.egg-info/
+.DS_Store
+*.log
+dashboard/.streamlit/secrets.toml
+demo-data/

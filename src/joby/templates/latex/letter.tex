@@ -1,0 +1,72 @@
+% =====================================================================
+%  Joby — modèle de lettre de motivation par défaut (corporate, Tectonic)
+%  Structure classique : coordonnées du candidat, de l'entreprise, lieu et
+%  date, objet, corps, signature. La signature manuscrite (signature.png)
+%  est ajoutée automatiquement si tu l'as fournie.
+% =====================================================================
+\documentclass[11pt]{article}
+
+\usepackage[a4paper, top=2.2cm, bottom=2.2cm, left=2.4cm, right=2.4cm]{geometry}
+\usepackage{fontspec}
+\setmainfont{texgyreheros}[
+  Extension = .otf,
+  UprightFont = *-regular,
+  BoldFont = *-bold,
+  ItalicFont = *-italic,
+  BoldItalicFont = *-bolditalic,
+]
+\usepackage{xcolor}
+\usepackage{graphicx}
+\usepackage[hidelinks]{hyperref}
+
+\definecolor{ink}{HTML}{1F2A37}
+\definecolor{accent}{HTML}{1F4E79}
+\definecolor{soft}{HTML}{5B6573}
+\color{ink}
+
+\pagestyle{empty}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{9pt}
+\linespread{1.15}
+
+% \sender{Nom}{lignes de coordonnées séparées par \\}
+\newcommand{\sender}[2]{{\large\bfseries #1}\\[2pt]{\small\color{soft} #2}\par}
+% \recipient{lignes de l'adresse de l'entreprise}
+\newcommand{\recipient}[1]{\hfill\begin{minipage}[t]{0.45\linewidth}#1\end{minipage}\par}
+% \placedate{Lieu, le date}
+\newcommand{\placedate}[1]{\hfill #1\par}
+% \subject{objet}
+\newcommand{\subject}[1]{\textbf{\color{accent}#1}\par}
+% \signoff{Nom}
+\newcommand{\signoff}[1]{%
+  \vspace{6pt}\hfill\begin{minipage}[t]{0.4\linewidth}\centering
+    \IfFileExists{signature.png}{\includegraphics[height=1.4cm]{signature.png}\\[-2pt]}{\vspace{1cm}}
+    #1
+  \end{minipage}\par}
+
+\begin{document}
+
+\sender{Firstname Lastname}{City, Country\\+33 6 00 00 00 00\\name@example.com}
+
+\vspace{8pt}
+\recipient{Company Name\\Recruitment team\\Street address\\City}
+
+\vspace{6pt}
+\placedate{City, 1 January 2026}
+
+\vspace{6pt}
+\subject{Subject: Application for the position of Target Role}
+
+Dear Hiring Team,
+
+First paragraph: why this company, specifically.
+
+Second paragraph: what I bring, with concrete proof.
+
+Third paragraph: what I want to build with you, and a clear call to action.
+
+Yours sincerely,
+
+\signoff{Firstname Lastname}
+
+\end{document}

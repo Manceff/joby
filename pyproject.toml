@@ -1,0 +1,29 @@
+[build-system]
+requires = ["setuptools>=69"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "joby"
+version = "0.1.0"
+description = "Ton agent de recherche d'emploi : peu de candidatures, mais irréprochables. Construit sur CareerOps et Claude Code."
+readme = "README.md"
+license = "MIT"
+requires-python = ">=3.10"
+dependencies = [
+  "rich>=13.7",
+  "questionary>=2.0",
+  "pyyaml>=6.0",
+  "streamlit>=1.40",
+  "pandas>=2.0",
+  "pypdfium2>=4.30",
+  "mcp>=2.0,<3",
+]
+
+[project.scripts]
+joby = "joby.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+joby = ["prompts/**/*.md", "templates/latex/*", "browser/*.mjs"]

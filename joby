@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+# Lanceur de Joby : utilise l'environnement Python du projet, où qu'on soit.
+DIR="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]}" 2>/dev/null || python3 -c 'import os,sys;print(os.path.realpath(sys.argv[1]))' "${BASH_SOURCE[0]}")")" && pwd)"
+if [ ! -x "$DIR/.venv/bin/joby" ]; then
+  echo "Joby n'est pas encore installé. Lance d'abord : $DIR/install.sh" >&2
+  exit 1
+fi
+exec "$DIR/.venv/bin/joby" "$@"
