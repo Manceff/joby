@@ -60,7 +60,9 @@ CREATE TABLE IF NOT EXISTS offers (
     applied_at      TEXT,
     apply_report    TEXT,
     pending_questions TEXT,
-    attempts        INTEGER NOT NULL DEFAULT 0
+    attempts        INTEGER NOT NULL DEFAULT 0,
+    sector          TEXT,
+    had_interview   INTEGER NOT NULL DEFAULT 0
 );
 CREATE INDEX IF NOT EXISTS offers_status ON offers(status);
 
@@ -105,6 +107,20 @@ def now() -> str:
     return datetime.now(timezone.utc).replace(microsecond=0).isoformat()
 
 
+# Colonnes ajoutées après la première version : les bases existantes sont mises à niveau en place.
+MIGRATIONS = {
+    "sector": "ALTER TABLE offers ADD COLUMN sector TEXT",
+    "had_interview": "ALTER TABLE offers ADD COLUMN had_interview INTEGER NOT NULL DEFAULT 0",
+}
+
+
+def _migrate(conn: sqlite3.Connection) -> None:
+    cols = {r[1] for r in conn.execute("PRAGMA table_info(offers)")}
+    for col, sql in MIGRATIONS.items():
+        if col not in cols:
+            conn.execute(sql)
+
+
 @contextmanager
 def connect() -> Iterator[sqlite3.Connection]:
     paths.DB.parent.mkdir(parents=True, exist_ok=True)
@@ -113,6 +129,7 @@ def connect() -> Iterator[sqlite3.Connection]:
     conn.execute("PRAGMA journal_mode=WAL")
     conn.execute("PRAGMA foreign_keys=ON")
     conn.executescript(SCHEMA)
+    _migrate(conn)
     try:
         yield conn
         conn.commit()
@@ -143,6 +160,8 @@ def set_offer(offer_id: int, **fields: Any) -> None:
     if not fields:
         return
     fields["updated_at"] = now()
+    if fields.get("status") in ("interview", "offer"):
+        fields["had_interview"] = 1  # un entretien reste acquis même si un refus suit
     for k, v in list(fields.items()):
         if isinstance(v, (dict, list)):
             fields[k] = json.dumps(v, ensure_ascii=False)

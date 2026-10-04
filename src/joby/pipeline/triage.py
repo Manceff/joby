@@ -7,7 +7,7 @@ import re
 import urllib.request
 
 from .. import careerops, claude, config, db
-from . import models, profile_context
+from . import models, profile_context, sectors
 
 PRESCREEN_BATCH = 60
 
@@ -97,9 +97,15 @@ def analyse() -> tuple[int, int]:
             tools = ["WebFetch"]
         prompt = (f"{profile_context()}\n\n<job_posting url=\"{o['url']}\" company=\"{o['company']}\" "
                   f"title=\"{o['title']}\">\n{text}\n</job_posting>")
+        schema, cats = ANALYSIS_SCHEMA, sectors.names()
+        if sectors.taxonomy():
+            schema = {**ANALYSIS_SCHEMA, "properties": {**ANALYSIS_SCHEMA["properties"],
+                                                        "sector": {"type": "string", "enum": cats}}}
+            prompt += (f"\n\nAlso set `sector`: the best-fitting {sectors.dimension()} for this posting, "
+                       f"among: {', '.join(cats)}.")
         try:
             res = claude.run(prompt, system=claude.prompt_file("pipeline/analysis.md"), model=models()["analysis"],
-                             schema=ANALYSIS_SCHEMA, tools=tools, timeout=600)
+                             schema=schema, tools=tools, timeout=600)
         except claude.QuotaReached:
             raise
         except claude.ClaudeError as e:
@@ -111,6 +117,8 @@ def analyse() -> tuple[int, int]:
             continue
         score = float(a["score"])
         good = score >= cfg["min_score"] and not a.get("dealbreaker")
+        if a.get("sector"):
+            db.set_offer(o["id"], sector=a["sector"])
         db.set_offer(o["id"], score=score, analysis=a, fit_summary=a["summary"], language=a.get("language"),
                      location=a.get("location") or o["location"], status="shortlisted" if good else "discarded")
         if good:

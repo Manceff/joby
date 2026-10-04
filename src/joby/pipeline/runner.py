@@ -16,7 +16,7 @@ from contextlib import contextmanager
 from datetime import datetime, timedelta, timezone
 
 from .. import claude, config, db, paths, ui
-from . import apply, dossier, mail, scan, triage
+from . import apply, dossier, mail, scan, sectors, triage
 
 log = logging.getLogger("joby")
 
@@ -65,6 +65,7 @@ def run_cycle() -> dict:
     ok = True
     try:
         _stage("repérage", scan.run, summary)
+        _stage("classement", sectors.run, summary)
         _stage("présélection", lambda: triage.prescreen()[0], summary)
         _stage("analyse", lambda: triage.analyse()[1], summary)
         _stage("dossiers", dossier.run, summary)

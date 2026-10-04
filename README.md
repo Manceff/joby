@@ -123,13 +123,18 @@ Tu peux t'arrêter à tout moment : `joby setup` reprend là où tu en étais, e
 | `joby dashboard` | ouvre le tableau de bord |
 | `joby status` | résumé rapide dans le terminal |
 | `joby login` | te reconnecter à tes sites carrières |
+| `joby sectors` | ta grille de sous-métiers (`--regenerate` pour la refaire, `--reclassify` pour reclasser) |
 | `joby doctor` | vérifie l'installation |
 | `joby demo` | essayer le dashboard avec des données fictives |
 | `joby reset` | efface toutes tes données |
 
 ## Le dashboard
 
-- **Vue d'ensemble** : chiffres clés, entonnoir, activité de l'agent, bouton « lancer un cycle ».
+- **Vue d'ensemble** : l'entonnoir de ta recherche (offres lues → retenues → envoyées → entretiens →
+  offres d'embauche), les taux qui comptent (sélection, réponse, entretien, délai de réponse), et
+  **où se trouvent les opportunités** : une ventilation par sous-métier propre à ton domaine
+  (Buyout / Growth / Private Debt… en private equity, Front-end / IA / DevOps… en tech), conçue par
+  Claude à partir de ta recherche, avec graphique et tableau croisé.
 - **À valider** : chaque dossier avec la note, les points forts et de vigilance, les notes de
   rédaction, et l'aperçu du CV et de la lettre côte à côte. *Valider*, *Demander une retouche* ou *Écarter*.
 - **Action requise** : les questions que l'agent n'a pas voulu deviner. Tes réponses peuvent

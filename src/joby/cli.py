@@ -7,6 +7,7 @@
   joby dashboard       ouvre le tableau de bord
   joby status          résumé dans le terminal
   joby login           rouvrir le navigateur pour te (re)connecter à tes sites
+  joby sectors         ta grille de spécialités (--regenerate, --reclassify)
   joby doctor          vérifie l'installation
   joby demo            essayer le dashboard avec des données fictives
 """
@@ -107,6 +108,26 @@ def cmd_sites(args) -> None:
         print(json.dumps(result, ensure_ascii=False, indent=2))
 
 
+def cmd_sectors(args) -> None:
+    from .pipeline import sectors
+    with ui.console.status("Conception de ta grille de spécialités…"):
+        sectors.ensure_taxonomy(force=args.regenerate)
+    t = sectors.taxonomy()
+    if not t:
+        ui.warn("Termine d'abord l'étape « Le poste que tu cherches » (joby setup --step search).")
+        return
+    if args.reclassify:
+        with db.connect() as c:
+            c.execute("UPDATE offers SET sector=NULL")
+    with ui.console.status("Classement des offres…"):
+        n = sectors.classify_missing()
+    table = Table(box=None, padding=(0, 2), show_header=False)
+    for c in t["categories"]:
+        table.add_row(f"[bold]{c['name']}[/]", Text(c["description"], style=ui.MUTED))
+    ui.card(table, title=f"🧭 {t['dimension']}")
+    ui.success(f"{n} offre(s) classée(s).")
+
+
 def cmd_doctor(_args) -> None:
     ui.banner("Vérification de l'installation")
     checks = []
@@ -180,6 +201,11 @@ def main() -> None:
     s.add_argument("--port", type=int, default=8502)
     s.set_defaults(fn=cmd_demo)
     sub.add_parser("reset", help="efface toutes tes données").set_defaults(fn=cmd_reset)
+
+    s = sub.add_parser("sectors", help="ta grille de spécialités (ventilation des offres)")
+    s.add_argument("--regenerate", action="store_true", help="redemander une grille au LLM")
+    s.add_argument("--reclassify", action="store_true", help="reclasser toutes les offres")
+    s.set_defaults(fn=cmd_sectors)
 
     s = sub.add_parser("sites", help="outils sur les sites carrières")
     s.add_argument("action", choices=["probe"])
