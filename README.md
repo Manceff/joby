@@ -80,7 +80,7 @@ abonnement Claude**, via [Claude Code](https://claude.com/claude-code).
 ### Trois commandes
 
 ```bash
-git clone --recursive https://github.com/<toi>/joby.git
+git clone --recursive https://github.com/Manceff/joby.git
 cd joby
 ./install.sh
 ```

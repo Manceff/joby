@@ -25,7 +25,7 @@ Note l'adresse IP du serveur, on l'appellera `<ip>`.
 
 ```bash
 ssh root@<ip>
-git clone --recursive https://github.com/<toi>/joby.git /tmp/joby
+git clone --recursive https://github.com/Manceff/joby.git /tmp/joby
 bash /tmp/joby/deploy/setup-server.sh
 exit
 ```
@@ -37,7 +37,7 @@ Ce script installe Python, Node.js, le navigateur distant, crée un utilisateur 
 
 ```bash
 ssh joby@<ip>
-git clone --recursive https://github.com/<toi>/joby.git ~/joby
+git clone --recursive https://github.com/Manceff/joby.git ~/joby
 cd ~/joby && ./install.sh
 ```
 
